@@ -23,84 +23,122 @@ import { VscCode } from "react-icons/vsc";
 
 interface Skill {
   name: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
   color: string;
   category: string;
 }
 
 const skills: Skill[] = [
   // Frontend
-  { name: "React.js", icon: <SiReact size={28} />, color: "#61DAFB", category: "Frontend" },
-  { name: "Next.js", icon: <SiNextdotjs size={28} />, color: "#ffffff", category: "Frontend" },
-  { name: "HTML5", icon: <SiHtml5 size={28} />, color: "#E34F26", category: "Frontend" },
-  { name: "CSS3", icon: <SiCss size={28} />, color: "#1572B6", category: "Frontend" },
-  { name: "Tailwind CSS", icon: <SiTailwindcss size={28} />, color: "#06B6D4", category: "Frontend" },
-  { name: "Framer Motion", icon: <SiFramer size={28} />, color: "#BB4B96", category: "Frontend" },
+  { name: "React.js", icon: SiReact, color: "#61DAFB", category: "Frontend" },
+  { name: "Next.js", icon: SiNextdotjs, color: "#ffffff", category: "Frontend" },
+  { name: "HTML5", icon: SiHtml5, color: "#E34F26", category: "Frontend" },
+  { name: "CSS3", icon: SiCss, color: "#1572B6", category: "Frontend" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", category: "Frontend" },
+  { name: "Framer Motion", icon: SiFramer, color: "#BB4B96", category: "Frontend" },
   // Backend
-  { name: "Node.js", icon: <SiNodedotjs size={28} />, color: "#339933", category: "Backend" },
-  { name: "Express.js", icon: <SiExpress size={28} />, color: "#ffffff", category: "Backend" },
+  { name: "Node.js", icon: SiNodedotjs, color: "#339933", category: "Backend" },
+  { name: "Express.js", icon: SiExpress, color: "#ffffff", category: "Backend" },
   // Database
-  { name: "MongoDB", icon: <SiMongodb size={28} />, color: "#47A248", category: "Database" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248", category: "Database" },
   // Tools
-  { name: "Git", icon: <SiGit size={28} />, color: "#F05032", category: "Tools" },
-  { name: "GitHub", icon: <SiGithub size={28} />, color: "#ffffff", category: "Tools" },
-  { name: "Vite", icon: <SiVite size={28} />, color: "#646CFF", category: "Tools" },
-  { name: "VS Code", icon: <VscCode size={28} />, color: "#007ACC", category: "Tools" },
-  { name: "Postman", icon: <SiPostman size={28} />, color: "#FF6C37", category: "Tools" },
+  { name: "Git", icon: SiGit, color: "#F05032", category: "Tools" },
+  { name: "GitHub", icon: SiGithub, color: "#ffffff", category: "Tools" },
+  { name: "Vite", icon: SiVite, color: "#646CFF", category: "Tools" },
+  { name: "VS Code", icon: VscCode, color: "#007ACC", category: "Tools" },
+  { name: "Postman", icon: SiPostman, color: "#FF6C37", category: "Tools" },
   // Languages
-  { name: "JavaScript", icon: <SiJavascript size={28} />, color: "#F7DF1E", category: "Languages" },
-  { name: "Python", icon: <SiPython size={28} />, color: "#3776AB", category: "Languages" },
+  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", category: "Languages" },
+  { name: "Python", icon: SiPython, color: "#3776AB", category: "Languages" },
 ];
 
 const categories = ["Frontend", "Backend", "Database", "Tools", "Languages"];
 
-function SkillCard({ skill, delay }: { skill: Skill; delay: number }) {
+// Icon animation variants for 360 spin
+const iconVariants = {
+  initial: { rotate: 0 },
+  hover: {
+    rotate: 360,
+    transition: {
+      duration: 0.6,
+      ease: "easeInOut",
+    },
+  },
+} as const;
+
+// Pill animation variants for fade up and hover highlights
+const pillVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+    scale: 1,
+    borderColor: "rgba(124, 58, 237, 0.25)",
+    backgroundColor: "rgba(124, 58, 237, 0.08)",
+    boxShadow: "0 0 0px rgba(124, 58, 237, 0)",
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+    },
+  },
+  hover: {
+    scale: 1.08,
+    borderColor: "rgba(139, 92, 246, 0.7)",
+    backgroundColor: "rgba(124, 58, 237, 0.15)",
+    boxShadow: "0 0 12px rgba(124, 58, 237, 0.4)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25,
+    },
+  },
+} as const;
+
+function SkillPill({ skill }: { skill: Skill }) {
+  const Icon = skill.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      whileHover={{ y: -4, scale: 1.03 }}
-      className="skill-card"
-      style={{ cursor: "default" }}
+      variants={pillVariants}
+      whileHover="hover"
+      initial="initial"
+      animate="animate"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        borderRadius: "9999px",
+        padding: "8px 16px",
+        cursor: "default",
+        userSelect: "none",
+        borderStyle: "solid",
+        borderWidth: "1px",
+      }}
     >
-      {/* Icon */}
-      <div
+      <motion.span
+        variants={iconVariants}
         style={{
-          width: "52px",
-          height: "52px",
-          background: `rgba(${hexToRgb(skill.color)}, 0.1)`,
-          border: `1px solid rgba(${hexToRgb(skill.color)}, 0.25)`,
-          borderRadius: "12px",
-          display: "flex",
+          display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
-          margin: "0 auto 12px",
-          color: skill.color,
-          transition: "all 0.3s ease",
         }}
       >
-        {skill.icon}
-      </div>
-      <p
+        <Icon size={20} style={{ color: skill.color }} />
+      </motion.span>
+      <span
         style={{
           fontSize: "13px",
-          fontWeight: 600,
-          color: "#f1f5f9",
-          textAlign: "center",
+          fontWeight: 500,
+          color: "#e2e8f0",
+          letterSpacing: "0.2px",
         }}
       >
         {skill.name}
-      </p>
+      </span>
     </motion.div>
   );
-}
-
-function hexToRgb(hex: string): string {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return "255,255,255";
-  return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
 }
 
 export default function Skills() {
@@ -113,25 +151,58 @@ export default function Skills() {
       className="section-pad"
       style={{
         position: "relative",
-        background:
-          "linear-gradient(180deg, transparent, rgba(124,58,237,0.04) 50%, transparent)",
+        background: "#04040a",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-        {/* Header */}
+      {/* Background Accent */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "600px",
+          height: "400px",
+          background: "radial-gradient(circle, rgba(124, 58, 237, 0.03) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+        {/* Header Container */}
         <motion.div
           ref={sectionRef}
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          style={{ marginBottom: "64px" }}
+          style={{ marginBottom: "64px", position: "relative" }}
         >
-          <h2 className="section-heading">Tech Stack</h2>
+          {/* Subtle rotating conic-gradient ring behind the section title */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "40px",
+              transform: "translate(-50%, -50%)",
+              width: "180px",
+              height: "180px",
+              borderRadius: "50%",
+              background: "conic-gradient(from 0deg, transparent 30%, rgba(124, 58, 237, 0.15) 70%, rgba(167, 139, 250, 0.1) 90%, transparent)",
+              animation: "spin-ring 15s linear infinite",
+              filter: "blur(24px)",
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+          />
+
+          <h2 className="section-heading" style={{ zIndex: 1, position: "relative" }}>Tech Stack</h2>
           <motion.div
             className="heading-line"
             initial={{ width: 0 }}
             animate={inView ? { width: "60px" } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
+            style={{ zIndex: 1, position: "relative" }}
           />
           <p
             style={{
@@ -139,82 +210,108 @@ export default function Skills() {
               marginTop: "16px",
               fontSize: "16px",
               maxWidth: "480px",
+              zIndex: 1,
+              position: "relative",
             }}
           >
             Technologies I use to build full-stack products from scratch to deployment.
           </p>
         </motion.div>
 
-        {/* Category groups */}
-        {categories.map((cat, ci) => {
-          const catSkills = skills.filter((s) => s.category === cat);
-          return (
-            <div key={cat} style={{ marginBottom: "48px" }}>
-              {/* Category label */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: ci * 0.05 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  marginBottom: "20px",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    color: "#7c3aed",
-                    letterSpacing: "1.5px",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {cat}
-                </span>
-                <div
-                  style={{
-                    flex: 1,
-                    height: "1px",
-                    background: "rgba(124, 58, 237, 0.2)",
-                  }}
-                />
-              </motion.div>
-
-              {/* Skills grid */}
+        {/* Category Groups in compact horizontal rows */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {categories.map((cat, ci) => {
+            const catSkills = skills.filter((s) => s.category === cat);
+            return (
               <div
-                className="skills-grid"
+                key={cat}
+                className="category-row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gridTemplateColumns: "1fr",
                   gap: "16px",
+                  padding: "24px 0",
+                  borderBottom: "1px solid rgba(124, 58, 237, 0.08)",
                 }}
               >
-                {catSkills.map((skill, i) => (
-                  <SkillCard
-                    key={skill.name}
-                    skill={skill}
-                    delay={i * 0.07}
-                  />
-                ))}
+                {/* Category Heading (animated slightly before its pills) */}
+                <div className="category-header">
+                  <motion.h3
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#a78bfa",
+                      letterSpacing: "1.5px",
+                      textTransform: "uppercase",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      margin: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        background: "#7c3aed",
+                        boxShadow: "0 0 8px rgba(124, 58, 237, 0.8)",
+                        display: "inline-block",
+                      }}
+                    />
+                    {cat}
+                  </motion.h3>
+                </div>
+
+                {/* Staggered Pills */}
+                <motion.div
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true, margin: "-60px" }}
+                  variants={{
+                    initial: {},
+                    animate: {
+                      transition: {
+                        staggerChildren: 0.05,
+                        delayChildren: 0.12, // leading stagger
+                      },
+                    },
+                  }}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                  }}
+                >
+                  {catSkills.map((skill) => (
+                    <SkillPill key={skill.name} skill={skill} />
+                  ))}
+                </motion.div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
+      {/* Styled JSX for desktop layout adjustments */}
       <style jsx>{`
-        @media (max-width: 768px) {
-          .skills-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
+        .category-row:last-child {
+          border-bottom: none !important;
         }
-        @media (max-width: 480px) {
-          .skills-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 12px !important;
+
+        @media (min-width: 768px) {
+          .category-row {
+            grid-template-columns: 200px 1fr !important;
+            align-items: center !important;
+            gap: 32px !important;
+          }
+          .category-header {
+            display: flex;
+            justify-content: flex-start;
           }
         }
       `}</style>

@@ -10,14 +10,11 @@ export default function Footer() {
     <footer
       style={{
         position: "relative",
-        borderTop: "1px solid rgba(30, 27, 75, 0.6)",
-        background: "rgba(10, 10, 15, 0.95)",
-        padding: "40px 24px",
+        background: "#04040a",
+        padding: "48px 24px",
+        borderTop: "1px solid rgba(124, 58, 237, 0.1)",
       }}
     >
-      {/* Top divider glow */}
-      <div className="footer-divider" style={{ marginBottom: "40px" }} />
-
       <div
         style={{
           maxWidth: "1200px",
@@ -25,38 +22,36 @@ export default function Footer() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "28px",
+          gap: "24px",
+          textAlign: "center",
         }}
       >
-        {/* Logo */}
+        {/* Name in animated-style gradient */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ textAlign: "center" }}
         >
           <span
+            className="gradient-text"
             style={{
               fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
-              fontSize: "32px",
+              fontSize: "20px",
               fontWeight: 800,
-              background: "linear-gradient(135deg, #7c3aed, #a78bfa)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+              letterSpacing: "0.5px",
             }}
           >
-            RK
+            Banoth Revanth Kumar
           </span>
-          <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>
-            Full Stack Developer
+          <p style={{ color: "#64748b", fontSize: "13px", marginTop: "4px" }}>
+            Full Stack Developer • Final Year CSE B.Tech 2026
           </p>
         </motion.div>
 
-        {/* Social icons */}
+        {/* Social Icons with custom hover glow */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -67,27 +62,28 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            whileHover={{ y: -3, scale: 1.1 }}
+            whileHover={{ y: -3, scale: 1.08 }}
             style={{
               width: "44px",
               height: "44px",
-              background: "rgba(124, 58, 237, 0.1)",
-              border: "1px solid rgba(124, 58, 237, 0.3)",
+              background: "rgba(124, 58, 237, 0.05)",
+              border: "1px solid rgba(124, 58, 237, 0.25)",
               borderRadius: "10px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#a78bfa",
-              textDecoration: "none",
               transition: "all 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(124, 58, 237, 0.2)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(124,58,237,0.3)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(139, 92, 246, 0.7)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(124, 58, 237, 0.4)";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(124, 58, 237, 0.12)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(124, 58, 237, 0.1)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(124, 58, 237, 0.25)";
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(124, 58, 237, 0.05)";
             }}
           >
             <FiGithub size={20} />
@@ -98,27 +94,28 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            whileHover={{ y: -3, scale: 1.1 }}
+            whileHover={{ y: -3, scale: 1.08 }}
             style={{
               width: "44px",
               height: "44px",
-              background: "rgba(124, 58, 237, 0.1)",
-              border: "1px solid rgba(124, 58, 237, 0.3)",
+              background: "rgba(124, 58, 237, 0.05)",
+              border: "1px solid rgba(124, 58, 237, 0.25)",
               borderRadius: "10px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#a78bfa",
-              textDecoration: "none",
               transition: "all 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(124, 58, 237, 0.2)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(124,58,237,0.3)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(139, 92, 246, 0.7)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(124, 58, 237, 0.4)";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(124, 58, 237, 0.12)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(124, 58, 237, 0.1)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(124, 58, 237, 0.25)";
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(124, 58, 237, 0.05)";
             }}
           >
             <FiLinkedin size={20} />
@@ -128,13 +125,14 @@ export default function Footer() {
         {/* Divider */}
         <div
           style={{
-            width: "100%",
+            width: "80px",
             height: "1px",
-            background: "rgba(30, 27, 75, 0.6)",
+            background: "rgba(124, 58, 237, 0.2)",
+            margin: "8px 0",
           }}
         />
 
-        {/* Bottom row */}
+        {/* Credits Row with Beating Purple Heart */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -144,36 +142,28 @@ export default function Footer() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "8px",
-            textAlign: "center",
+            gap: "6px",
           }}
         >
           <p
             style={{
               color: "#94a3b8",
-              fontSize: "14px",
+              fontSize: "13.5px",
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              flexWrap: "wrap",
               justifyContent: "center",
             }}
           >
-            Built by{" "}
-            <span style={{ color: "#a78bfa", fontWeight: 600 }}>
-              Banoth Revanth Kumar
-            </span>{" "}
+            Designed & Built by{" "}
+            <span style={{ color: "#a78bfa", fontWeight: 600 }}>Revanth</span>{" "}
             with{" "}
             <FiHeart
-              size={14}
-              style={{
-                color: "#7c3aed",
-                fill: "#7c3aed",
-                filter: "drop-shadow(0 0 4px rgba(124,58,237,0.8))",
-              }}
+              size={13}
+              className="beating-heart"
             />
           </p>
-          <p style={{ color: "#475569", fontSize: "13px" }}>
+          <p style={{ color: "#475569", fontSize: "12px" }}>
             © {year} All rights reserved.
           </p>
         </motion.div>

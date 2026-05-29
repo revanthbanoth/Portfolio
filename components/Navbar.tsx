@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -15,17 +15,25 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
+  // Scroll Progress Bar
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
 
-      // Update active section
+      // Track active section
       const sections = ["home", "about", "skills", "projects"];
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom > 100) {
+          if (rect.top <= 120 && rect.bottom > 120) {
             setActiveSection(id);
             break;
           }
@@ -42,12 +50,31 @@ export default function Navbar() {
     const id = href.replace("#", "");
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      const topOffset = el.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({
+        top: topOffset,
+        behavior: "smooth",
+      });
     }
   };
 
   return (
     <>
+      {/* Scroll Progress Bar */}
+      <motion.div
+        style={{
+          scaleX,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "3px",
+          background: "linear-gradient(90deg, #7c3aed, #8b5cf6, #a78bfa)",
+          transformOrigin: "0%",
+          zIndex: 1001,
+        }}
+      />
+
       <motion.nav
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -63,15 +90,12 @@ export default function Navbar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: scrolled
-            ? "rgba(10, 10, 15, 0.92)"
-            : "transparent",
-          backdropFilter: scrolled ? "blur(20px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-          borderBottom: scrolled
-            ? "1px solid rgba(30, 27, 75, 0.6)"
-            : "none",
-          transition: "all 0.4s ease",
+          background: scrolled ? "rgba(4, 4, 10, 0.85)" : "transparent",
+          backdropFilter: scrolled ? "blur(24px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(24px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(124, 58, 237, 0.25)" : "none",
+          boxShadow: scrolled ? "0 4px 30px rgba(124, 58, 237, 0.06)" : "none",
+          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
           maxWidth: "100%",
           boxSizing: "border-box",
         }}
@@ -79,7 +103,10 @@ export default function Navbar() {
         {/* LOGO */}
         <motion.a
           href="#home"
-          onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }}
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavClick("#home");
+          }}
           whileHover={{ scale: 1.05 }}
           style={{
             textDecoration: "none",
@@ -91,7 +118,7 @@ export default function Navbar() {
           <span
             style={{
               fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
-              fontSize: "28px",
+              fontSize: "26px",
               fontWeight: 800,
               background: "linear-gradient(135deg, #7c3aed, #a78bfa)",
               WebkitBackgroundClip: "text",
@@ -108,8 +135,9 @@ export default function Navbar() {
               height: "6px",
               background: "#7c3aed",
               borderRadius: "50%",
-              boxShadow: "0 0 8px rgba(124, 58, 237, 0.8)",
+              boxShadow: "0 0 10px #8b5cf6, 0 0 20px #7c3aed",
               display: "inline-block",
+              animation: "pulse-glow 2s ease-in-out infinite",
             }}
           />
         </motion.a>
@@ -118,53 +146,77 @@ export default function Navbar() {
         <div
           style={{
             display: "flex",
-            gap: "32px",
+            gap: "36px",
             alignItems: "center",
           }}
           className="hidden-mobile"
         >
-          {navLinks.map((link) => (
-            <motion.a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
-              whileHover={{ y: -2 }}
-              className={activeSection === link.href.replace("#", "") ? "nav-link-active" : ""}
-              style={{
-                textDecoration: "none",
-                color:
-                  activeSection === link.href.replace("#", "")
-                    ? "#a78bfa"
-                    : "#94a3b8",
-                fontSize: "15px",
-                fontWeight: 500,
-                position: "relative",
-                transition: "color 0.3s ease",
-                paddingBottom: "4px",
-              }}
-              onMouseEnter={(e) => {
-                if (activeSection !== link.href.replace("#", "")) {
-                  (e.currentTarget as HTMLElement).style.color = "#f1f5f9";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeSection !== link.href.replace("#", "")) {
-                  (e.currentTarget as HTMLElement).style.color = "#94a3b8";
-                }
-              }}
-            >
-              {link.label}
-            </motion.a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.replace("#", "");
+            return (
+              <motion.a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(link.href);
+                }}
+                whileHover={{ y: -1 }}
+                style={{
+                  textDecoration: "none",
+                  color: isActive ? "#f1f5f9" : "#94a3b8",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  position: "relative",
+                  transition: "color 0.3s ease",
+                  padding: "6px 0",
+                  letterSpacing: "0.5px",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.color = "#f1f5f9";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+                  }
+                }}
+              >
+                {link.label}
+                {/* Active Link dot slide effect */}
+                {isActive && (
+                  <motion.span
+                    layoutId="activeDot"
+                    style={{
+                      position: "absolute",
+                      bottom: "-2px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "5px",
+                      height: "5px",
+                      borderRadius: "50%",
+                      background: "#a78bfa",
+                      boxShadow: "0 0 12px #8b5cf6, 0 0 6px #7c3aed",
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </motion.a>
+            );
+          })}
 
           <motion.a
-            href="https://github.com/revanthbanoth"
+            href="https://www.linkedin.com/in/revanth-banoth"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            className="btn-primary"
-            style={{ padding: "8px 20px", fontSize: "14px" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="glow-border-btn"
           >
             Hire Me
           </motion.a>
@@ -216,7 +268,7 @@ export default function Navbar() {
               left: 0,
               right: 0,
               zIndex: 999,
-              padding: "20px 24px 24px",
+              padding: "20px 24px 28px",
               display: "flex",
               flexDirection: "column",
               gap: "4px",
@@ -226,20 +278,20 @@ export default function Navbar() {
               <motion.a
                 key={link.label}
                 href={link.href}
-                onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(link.href);
+                }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.07 }}
                 style={{
                   textDecoration: "none",
-                  color:
-                    activeSection === link.href.replace("#", "")
-                      ? "#a78bfa"
-                      : "#f1f5f9",
+                  color: activeSection === link.href.replace("#", "") ? "#a78bfa" : "#f1f5f9",
                   fontSize: "18px",
                   fontWeight: 500,
                   padding: "12px 0",
-                  borderBottom: "1px solid rgba(30, 27, 75, 0.5)",
+                  borderBottom: "1px solid rgba(124, 58, 237, 0.15)",
                   transition: "color 0.2s",
                 }}
               >
@@ -247,14 +299,14 @@ export default function Navbar() {
               </motion.a>
             ))}
             <motion.a
-              href="https://github.com/revanthbanoth"
+              href="https://www.linkedin.com/in/revanth-banoth"
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: navLinks.length * 0.07 }}
-              className="btn-primary"
-              style={{ marginTop: "16px", justifyContent: "center" }}
+              className="glow-border-btn"
+              style={{ marginTop: "20px", width: "100%" }}
             >
               Hire Me
             </motion.a>
@@ -262,7 +314,7 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Responsive style tag */}
+      {/* Responsive styles */}
       <style jsx global>{`
         .hidden-mobile {
           display: flex;

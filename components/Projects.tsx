@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { FiGithub, FiExternalLink } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
@@ -62,63 +62,71 @@ const projects: Project[] = [
   },
 ];
 
-function TechBadge({ tech }: { tech: string }) {
-  return <span className="tech-badge">{tech}</span>;
-}
-
 function ProjectCard({ project, delay }: { project: Project; delay: number }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
   const isBadgeOnly = !project.liveLink && !project.githubLink && project.badge;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+    // Calculate rotation angles (max 10 degrees)
+    const rY = (mouseX / (width / 2)) * 10;
+    const rX = -(mouseY / (height / 2)) * 10;
+    setRotateX(rX);
+    setRotateY(rY);
+  };
+
+  const handleMouseLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
 
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay, ease: "easeOut" }}
-      whileHover={{ y: -6 }}
-      className="project-card"
+      className="glow-card-border"
       style={{
-        height: "100%",
+        position: "relative",
+        borderRadius: "16px",
+        overflow: "hidden",
+        transformStyle: "preserve-3d",
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transition: "transform 0.1s ease-out, box-shadow 0.3s ease",
+        background: "var(--bg-card)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "28px",
       }}
     >
-      {/* Top accent gradient */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "60%",
-          height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent)",
-        }}
-      />
-
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          marginBottom: "16px",
-          gap: "12px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      {/* Top Part: Icon, Title, and Featured Badge */}
+      <div style={{ transform: "translateZ(30px)", transition: "all 0.3s ease" }}>
+        {/* Header Icon + Title */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", position: "relative" }}>
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              width: "40px",
+              height: "40px",
               background: "rgba(124, 58, 237, 0.15)",
               border: "1px solid rgba(124, 58, 237, 0.3)",
-              borderRadius: "8px",
+              borderRadius: "10px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#a78bfa",
-              flexShrink: 0,
             }}
           >
             <BsStars size={16} />
@@ -129,128 +137,151 @@ function ProjectCard({ project, delay }: { project: Project; delay: number }) {
               fontSize: "18px",
               fontWeight: 700,
               color: "#f1f5f9",
-              lineHeight: 1.2,
+              paddingRight: project.featured ? "90px" : "0px",
             }}
           >
             {project.title}
           </h3>
         </div>
 
-        {/* Badges */}
-        <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
-          {project.featured && (
-            <span
-              style={{
-                background: "rgba(124, 58, 237, 0.2)",
-                border: "1px solid rgba(124, 58, 237, 0.4)",
-                color: "#a78bfa",
-                borderRadius: "20px",
-                padding: "3px 10px",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.5px",
-              }}
-            >
-              ★ LIVE
+        {/* Featured Badge */}
+        {project.featured && (
+          <span
+            style={{
+              position: "absolute",
+              top: "28px",
+              right: "28px",
+              background: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
+              color: "#fff",
+              borderRadius: "20px",
+              padding: "4px 12px",
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              boxShadow: "0 0 10px rgba(124,58,237,0.5)",
+            }}
+          >
+            ★ FEATURED
+          </span>
+        )}
+
+        {/* Description text - ALWAYS VISIBLE */}
+        <p style={{ color: "#94a3b8", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
+          {project.description}
+        </p>
+      </div>
+
+      {/* Middle Part: Tech stack pills */}
+      <div style={{ transform: "translateZ(20px)", marginBottom: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+          }}
+        >
+          {project.tech.map((t) => (
+            <span key={t} className="tech-badge-pill">
+              {t}
             </span>
-          )}
-          {project.badge && (
-            <span
-              style={{
-                background: "rgba(245, 158, 11, 0.15)",
-                border: "1px solid rgba(245, 158, 11, 0.3)",
-                color: "#fbbf24",
-                borderRadius: "20px",
-                padding: "3px 10px",
-                fontSize: "11px",
-                fontWeight: 600,
-              }}
-            >
-              EVENT
-            </span>
-          )}
+          ))}
         </div>
       </div>
 
-      {/* Description */}
-      <p
-        style={{
-          color: "#94a3b8",
-          fontSize: "14px",
-          lineHeight: 1.7,
-          flex: 1,
-          marginBottom: "20px",
-        }}
-      >
-        {project.description}
-      </p>
-
-      {/* Tech badges */}
+      {/* Bottom Part: Action buttons (Always visible, pushed to bottom) */}
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          gap: "6px",
-          marginBottom: "20px",
+          gap: "8px",
+          marginTop: "auto",
+          paddingTop: "12px",
+          transform: "translateZ(25px)",
         }}
       >
-        {project.tech.map((t) => (
-          <TechBadge key={t} tech={t} />
-        ))}
+        {!isBadgeOnly ? (
+          <>
+            {project.githubLink && (
+              <a
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="github-btn"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "13px",
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  background: "transparent",
+                  border: "1px solid rgba(124, 58, 237, 0.5)",
+                  color: "#a78bfa",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <FiGithub size={14} />
+                GitHub
+              </a>
+            )}
+            {project.liveLink && (
+              <a
+                href={project.liveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="live-btn"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "13px",
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  background: "#7c3aed",
+                  color: "#fff",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <FiExternalLink size={14} />
+                Live Demo
+              </a>
+            )}
+          </>
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              padding: "10px 14px",
+              background: "rgba(245, 158, 11, 0.08)",
+              border: "1px solid rgba(245, 158, 11, 0.2)",
+              borderRadius: "8px",
+              textAlign: "center",
+              fontSize: "13px",
+              color: "#fbbf24",
+              fontWeight: 500,
+            }}
+          >
+            {project.badge}
+          </div>
+        )}
       </div>
 
-      {/* Action buttons */}
-      {!isBadgeOnly && (
-        <div style={{ display: "flex", gap: "10px", marginTop: "auto" }}>
-          {project.githubLink && (
-            <a
-              href={project.githubLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outline"
-              style={{
-                padding: "8px 16px",
-                fontSize: "13px",
-                flex: project.liveLink ? undefined : 1,
-                justifyContent: project.liveLink ? undefined : "center",
-              }}
-            >
-              <FiGithub size={14} />
-              GitHub
-            </a>
-          )}
-          {project.liveLink && (
-            <a
-              href={project.liveLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ padding: "8px 16px", fontSize: "13px", flex: 1, justifyContent: "center" }}
-            >
-              <FiExternalLink size={14} />
-              Live Demo
-            </a>
-          )}
-        </div>
-      )}
-
-      {/* Badge-only card footer */}
-      {isBadgeOnly && (
-        <div
-          style={{
-            marginTop: "auto",
-            padding: "12px 16px",
-            background: "rgba(245, 158, 11, 0.07)",
-            border: "1px solid rgba(245, 158, 11, 0.2)",
-            borderRadius: "8px",
-            textAlign: "center",
-            fontSize: "13px",
-            color: "#fbbf24",
-          }}
-        >
-          {project.badge} — Internal Event Project
-        </div>
-      )}
+      {/* Styled JSX for premium hovers */}
+      <style jsx>{`
+        .github-btn:hover {
+          background: rgba(124, 58, 237, 0.15) !important;
+          box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
+          border-color: rgba(139, 92, 246, 0.8) !important;
+        }
+        .live-btn:hover {
+          background: #6d28d9 !important;
+          transform: scale(1.03);
+          box-shadow: 0 0 14px rgba(124, 58, 237, 0.5);
+        }
+      `}</style>
     </motion.div>
   );
 }
@@ -260,8 +291,12 @@ export default function Projects() {
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="section-pad" style={{ position: "relative" }}>
-      {/* BG accent */}
+    <section
+      id="projects"
+      className="section-pad"
+      style={{ position: "relative", background: "#04040a" }}
+    >
+      {/* Background Accent */}
       <div
         style={{
           position: "absolute",
@@ -269,12 +304,13 @@ export default function Projects() {
           right: 0,
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(124,58,237,0.04) 0%, transparent 70%)",
           pointerEvents: "none",
+          zIndex: 0,
         }}
       />
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
         {/* Header */}
         <motion.div
           ref={sectionRef}
@@ -290,7 +326,14 @@ export default function Projects() {
             animate={inView ? { width: "60px" } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
           />
-          <p style={{ color: "#94a3b8", marginTop: "16px", fontSize: "16px", maxWidth: "520px" }}>
+          <p
+            style={{
+              color: "#94a3b8",
+              marginTop: "16px",
+              fontSize: "16px",
+              maxWidth: "520px",
+            }}
+          >
             Real products I&apos;ve built and shipped — from concept to deployment.
           </p>
         </motion.div>
@@ -306,7 +349,7 @@ export default function Projects() {
           }}
         >
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} delay={i * 0.1} />
+            <ProjectCard key={project.id} project={project} delay={i * 0.08} />
           ))}
         </div>
 
@@ -315,7 +358,7 @@ export default function Projects() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           style={{
             textAlign: "center",
             marginTop: "52px",

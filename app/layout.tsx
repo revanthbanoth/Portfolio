@@ -50,7 +50,7 @@ export default function RootLayout({
       <body
         style={{
           fontFamily: "var(--font-inter), Inter, sans-serif",
-          backgroundColor: "#0a0a0f",
+          backgroundColor: "#04040a",
           color: "#f1f5f9",
           overflowX: "hidden",
         }}
