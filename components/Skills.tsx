@@ -220,7 +220,7 @@ export default function Skills() {
 
         {/* Category Groups in compact horizontal rows */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {categories.map((cat, ci) => {
+          {categories.map((cat) => {
             const catSkills = skills.filter((s) => s.category === cat);
             return (
               <div
