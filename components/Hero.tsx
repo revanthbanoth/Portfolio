@@ -174,14 +174,8 @@ export default function Hero() {
                   },
                 },
               }}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
-              style={{
-                fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
-                marginBottom: "12px",
-                color: "#f1f5f9",
-                wordBreak: "keep-all",
-                overflowWrap: "break-word",
-              }}
+              className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+              style={{ wordBreak: "keep-all", overflowWrap: "break-word" }}
             >
               {/* Split first name */}
               {Array.from(nameFirst).map((char, index) => (
@@ -229,7 +223,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.0 }}
-            className="text-xl md:text-2xl font-semibold w-full text-center md:text-left min-h-[2rem] flex items-center justify-center md:justify-start"
+            className="text-xl md:text-2xl font-semibold w-full text-center md:text-left min-h-[2.5rem] flex items-center justify-center md:justify-start overflow-visible whitespace-normal"
             style={{
               color: "#a78bfa",
               marginBottom: "16px",
