@@ -161,7 +161,7 @@ export default function Hero() {
           </motion.p>
 
           {/* Staggered Name Reveal wrapped in a max-w-lg container to prevent wrap issues */}
-          <div className="max-w-lg mx-auto md:mx-0 w-full text-center md:text-left">
+          <div className="max-w-lg mx-auto md:mx-0 w-full px-4 text-center md:text-left">
             <motion.h1
               initial="hidden"
               animate="visible"
@@ -174,7 +174,7 @@ export default function Hero() {
                   },
                 },
               }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
               style={{
                 fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
                 marginBottom: "12px",
