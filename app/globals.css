@@ -15,7 +15,7 @@
   --font-space-grotesk: 'Space Grotesk', sans-serif;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
   --color-card: var(--bg-card);
@@ -43,7 +43,13 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter);
   overflow-x: hidden;
-  cursor: none; /* Hide default cursor on desktop */
+}
+
+/* Hide default cursor globally on desktop (min-width: 769px) */
+@media (min-width: 769px) {
+  * {
+    cursor: none !important;
+  }
 }
 
 @media (max-width: 768px) {
