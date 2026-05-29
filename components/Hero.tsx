@@ -36,6 +36,7 @@ function useTypewriter(texts: string[], speed = 80, pause = 1800) {
     }
 
     return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [charIdx, deleting, textIdx, texts, speed, pause]);
 
   return texts[textIdx].slice(0, charIdx);
