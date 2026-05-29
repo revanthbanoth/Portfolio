@@ -174,7 +174,7 @@ export default function Hero() {
                   },
                 },
               }}
-              className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+              className="text-[1.6rem] sm:text-[2rem] md:text-[2.8rem] lg:text-[3.5rem] xl:text-[4.5rem] font-bold leading-tight"
               style={{ wordBreak: "keep-all", overflowWrap: "break-word" }}
             >
               {/* Split first name */}
@@ -229,7 +229,7 @@ export default function Hero() {
               marginBottom: "16px",
             }}
           >
-            <span>{typeText}</span>
+            <span className="w-full overflow-visible whitespace-normal min-h-[2.5rem]">{typeText}</span>
             <span className="typewriter-cursor" />
           </motion.div>
 
