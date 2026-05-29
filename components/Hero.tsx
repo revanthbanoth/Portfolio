@@ -74,6 +74,7 @@ export default function Hero() {
   return (
     <section
       id="home"
+      className="px-4 md:px-8 lg:px-16 relative min-h-screen flex flex-col justify-center items-center overflow-hidden py-20 bg-[#04040a]"
       style={{
         minHeight: "100vh",
         position: "relative",
@@ -102,28 +103,19 @@ export default function Hero() {
 
       {/* Main Content Container */}
       <div
+        className="hero-flex relative z-2 w-full max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-center md:justify-between gap-12 md:gap-16"
         style={{
-          position: "relative",
-          zIndex: 2,
-          width: "100%",
-          maxWidth: "1200px",
-          margin: "0 auto",
           padding: "60px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "64px",
         }}
-        className="hero-flex"
       >
         {/* LEFT — TEXT BIO */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div className="w-full text-center md:text-left md:flex-1 px-4 md:px-0">
           {/* Availability Badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ marginBottom: "20px" }}
+            className="flex justify-center md:justify-start w-full md:w-auto mb-5"
           >
             <span
               style={{
@@ -181,11 +173,9 @@ export default function Hero() {
                 },
               },
             }}
+            className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight break-words"
             style={{
               fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
-              fontSize: "clamp(2.5rem, 6vw, 4.25rem)",
-              fontWeight: 800,
-              lineHeight: 1.1,
               marginBottom: "12px",
               color: "#f1f5f9",
             }}
@@ -219,6 +209,7 @@ export default function Hero() {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.8, delay: 0.9, ease: "easeInOut" }}
+            className="mx-auto md:mx-0"
             style={{
               height: "2px",
               background: "linear-gradient(90deg, #7c3aed, #a78bfa, transparent)",
@@ -234,13 +225,9 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.0 }}
+            className="text-xl md:text-2xl font-semibold w-full text-center md:text-left min-h-[2rem] flex items-center justify-center md:justify-start"
             style={{
-              fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
-              fontWeight: 600,
               color: "#a78bfa",
-              height: "36px",
-              display: "flex",
-              alignItems: "center",
               marginBottom: "16px",
             }}
           >
@@ -253,6 +240,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.1 }}
+            className="mx-auto md:mx-0"
             style={{
               fontSize: "clamp(15px, 1.8vw, 17px)",
               color: "#94a3b8",
@@ -270,7 +258,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.3 }}
-            style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}
+            className="w-full md:w-auto flex flex-col md:flex-row gap-3 justify-center md:justify-start items-center"
           >
             <motion.a
               href="#projects"
@@ -278,7 +266,7 @@ export default function Hero() {
                 e.preventDefault();
                 handleScroll();
               }}
-              className="btn-primary"
+              className="btn-primary w-full md:w-auto text-center justify-center"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -290,7 +278,7 @@ export default function Hero() {
               href="https://github.com/revanthbanoth"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-outline"
+              className="btn-outline w-full md:w-auto text-center justify-center"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -305,14 +293,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9, x: 50 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          style={{
-            flexShrink: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          }}
-          className="hero-photo"
+          className="hero-photo order-first md:order-last flex-shrink-0 flex items-center justify-center relative w-[160px] h-[160px] md:w-[300px] md:h-[300px]"
         >
           {/* Animated decorative rings */}
           <div className="profile-ring" />
@@ -390,10 +371,9 @@ export default function Hero() {
 
           {/* Profile image wrapper */}
           <div
+            className="w-[160px] h-[160px] md:w-[300px] md:h-[300px]"
             style={{
               position: "relative",
-              width: "300px",
-              height: "300px",
               borderRadius: "50%",
               padding: "6px",
               background: "linear-gradient(135deg, rgba(124,58,237,0.4), rgba(167,139,250,0.2))",
@@ -430,17 +410,9 @@ export default function Hero() {
 
       {/* Scroll indicator centered exactly 32px above the bottom edge */}
       <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 cursor-pointer z-5"
         style={{
-          position: "absolute",
-          bottom: "32px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "8px",
-          cursor: "pointer",
-          zIndex: 5,
+          pointerEvents: "auto",
         }}
         onClick={handleScroll}
       >
@@ -472,41 +444,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
-
-      {/* Responsive styles */}
-      <style jsx>{`
-        .hero-flex {
-          flex-direction: row;
-        }
-        .hero-photo {
-          display: flex;
-        }
-        @media (max-width: 768px) {
-          .hero-flex {
-            flex-direction: column-reverse !important;
-            text-align: center;
-            padding-bottom: 80px !important;
-          }
-          .hero-flex > div:first-child {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-          }
-          .hero-photo {
-            width: 220px !important;
-            height: 220px !important;
-            margin: 0 auto;
-          }
-          .hero-photo > div:nth-child(5) {
-            width: 220px !important;
-            height: 220px !important;
-          }
-          .floating-badge, .floating-badge-delay-1, .floating-badge-delay-2 {
-            width: 38px !important;
-            height: 38px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

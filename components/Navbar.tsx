@@ -145,11 +145,10 @@ export default function Navbar() {
         {/* DESKTOP LINKS */}
         <div
           style={{
-            display: "flex",
             gap: "36px",
             alignItems: "center",
           }}
-          className="hidden-mobile"
+          className="hidden md:flex"
         >
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.replace("#", "");
@@ -226,28 +225,22 @@ export default function Navbar() {
         <button
           aria-label="Toggle menu"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="show-mobile"
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            padding: "4px",
-          }}
+          className="flex md:hidden flex-col gap-1.5 p-2 bg-transparent border-none cursor-pointer z-50"
         >
-          <motion.div
-            animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-            className="hamburger-line"
+          <div
+            className={`w-6 h-0.5 bg-white rounded transition-all duration-300 ${
+              menuOpen ? "rotate-45 translate-y-2" : ""
+            }`}
           />
-          <motion.div
-            animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-            className="hamburger-line"
+          <div
+            className={`w-6 h-0.5 bg-white rounded transition-all duration-300 ${
+              menuOpen ? "opacity-0" : ""
+            }`}
           />
-          <motion.div
-            animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-            className="hamburger-line"
+          <div
+            className={`w-6 h-0.5 bg-white rounded transition-all duration-300 ${
+              menuOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
           />
         </button>
       </motion.nav>
@@ -257,22 +250,11 @@ export default function Navbar() {
         {menuOpen && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0, y: -20, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: -20, height: 0 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="mobile-menu"
-            style={{
-              position: "fixed",
-              top: "70px",
-              left: 0,
-              right: 0,
-              zIndex: 999,
-              padding: "20px 24px 28px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-            }}
+            className="absolute top-[70px] left-0 w-full bg-[#0a0a0f] border-t border-purple-900/30 py-4 px-6 flex flex-col gap-4 md:hidden z-[999] overflow-hidden"
           >
             {navLinks.map((link, i) => (
               <motion.a
@@ -284,15 +266,13 @@ export default function Navbar() {
                 }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.07 }}
+                transition={{ delay: i * 0.05 }}
+                className={`text-lg font-medium py-2 transition-colors duration-200 ${
+                  activeSection === link.href.replace("#", "") ? "text-[#a78bfa]" : "text-[#f1f5f9] hover:text-[#a78bfa]"
+                }`}
                 style={{
                   textDecoration: "none",
-                  color: activeSection === link.href.replace("#", "") ? "#a78bfa" : "#f1f5f9",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  padding: "12px 0",
-                  borderBottom: "1px solid rgba(124, 58, 237, 0.15)",
-                  transition: "color 0.2s",
+                  borderBottom: "1px solid rgba(124, 58, 237, 0.1)",
                 }}
               >
                 {link.label}
@@ -304,33 +284,15 @@ export default function Navbar() {
               rel="noopener noreferrer"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: navLinks.length * 0.07 }}
-              className="glow-border-btn"
-              style={{ marginTop: "20px", width: "100%" }}
+              transition={{ delay: navLinks.length * 0.05 }}
+              className="glow-border-btn w-full text-center"
+              style={{ marginTop: "8px" }}
             >
               Hire Me
             </motion.a>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Responsive styles */}
-      <style jsx global>{`
-        .hidden-mobile {
-          display: flex;
-        }
-        .show-mobile {
-          display: none;
-        }
-        @media (max-width: 768px) {
-          .hidden-mobile {
-            display: none !important;
-          }
-          .show-mobile {
-            display: flex !important;
-          }
-        }
-      `}</style>
     </>
   );
 }
