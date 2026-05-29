@@ -109,7 +109,7 @@ export default function Hero() {
         }}
       >
         {/* LEFT — TEXT BIO */}
-        <div className="w-full text-center md:text-left md:flex-1 px-4 md:px-0">
+        <div className="w-full md:w-1/2 lg:w-[55%] text-center md:text-left px-4 md:px-0 flex flex-col items-center md:items-start">
           {/* Availability Badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -160,49 +160,51 @@ export default function Hero() {
             Hi, I&apos;m
           </motion.p>
 
-          {/* Staggered Name Reveal */}
-          <motion.h1
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: 0.03,
-                  delayChildren: 0.25,
+          {/* Staggered Name Reveal wrapped in a max-w-lg container to prevent wrap issues */}
+          <div className="max-w-lg mx-auto md:mx-0 w-full text-center md:text-left">
+            <motion.h1
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.03,
+                    delayChildren: 0.25,
+                  },
                 },
-              },
-            }}
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight break-words"
-            style={{
-              fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
-              marginBottom: "12px",
-              color: "#f1f5f9",
-            }}
-          >
-            {/* Split first name */}
-            {Array.from(nameFirst).map((char, index) => (
-              <motion.span
-                key={`first-${index}`}
-                variants={letterVariants}
-                style={{ display: "inline-block", whiteSpace: "pre" }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            {/* Split last name as gradient text */}
-            <span className="gradient-text">
-              {Array.from(nameLast).map((char, index) => (
+              }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight break-words"
+              style={{
+                fontFamily: "var(--font-space-grotesk), Space Grotesk, sans-serif",
+                marginBottom: "12px",
+                color: "#f1f5f9",
+              }}
+            >
+              {/* Split first name */}
+              {Array.from(nameFirst).map((char, index) => (
                 <motion.span
-                  key={`last-${index}`}
+                  key={`first-${index}`}
                   variants={letterVariants}
                   style={{ display: "inline-block", whiteSpace: "pre" }}
                 >
                   {char}
                 </motion.span>
               ))}
-            </span>
-          </motion.h1>
+              {/* Split last name as gradient text */}
+              <span className="gradient-text">
+                {Array.from(nameLast).map((char, index) => (
+                  <motion.span
+                    key={`last-${index}`}
+                    variants={letterVariants}
+                    style={{ display: "inline-block", whiteSpace: "pre" }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
+            </motion.h1>
+          </div>
 
           {/* Glowing divider line */}
           <motion.div
@@ -293,16 +295,16 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9, x: 50 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          className="hero-photo order-first md:order-last flex-shrink-0 flex items-center justify-center relative w-[160px] h-[160px] md:w-[300px] md:h-[300px]"
+          className="hero-photo order-first md:order-last flex-shrink-0 flex items-center justify-center relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
         >
           {/* Animated decorative rings */}
           <div className="profile-ring" />
           <div className="profile-ring-dots" />
 
-          {/* Floating tech badges */}
+          {/* Floating tech badges (Hidden on Mobile) */}
           {/* Badge 1: React (Top Left) */}
           <div
-            className="floating-badge"
+            className="floating-badge hidden md:flex items-center justify-center"
             style={{
               position: "absolute",
               top: "-15px",
@@ -313,9 +315,6 @@ export default function Hero() {
               background: "rgba(13, 13, 26, 0.7)",
               border: "1px solid rgba(97, 218, 251, 0.4)",
               borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               backdropFilter: "blur(8px)",
               color: "#61DAFB",
             }}
@@ -325,7 +324,7 @@ export default function Hero() {
 
           {/* Badge 2: Node.js (Bottom Right) */}
           <div
-            className="floating-badge-delay-1"
+            className="floating-badge-delay-1 hidden md:flex items-center justify-center"
             style={{
               position: "absolute",
               bottom: "10px",
@@ -336,9 +335,6 @@ export default function Hero() {
               background: "rgba(13, 13, 26, 0.7)",
               border: "1px solid rgba(51, 153, 51, 0.4)",
               borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               backdropFilter: "blur(8px)",
               color: "#339933",
             }}
@@ -348,7 +344,7 @@ export default function Hero() {
 
           {/* Badge 3: MongoDB (Bottom Left) */}
           <div
-            className="floating-badge-delay-2"
+            className="floating-badge-delay-2 hidden md:flex items-center justify-center"
             style={{
               position: "absolute",
               bottom: "0px",
@@ -359,9 +355,6 @@ export default function Hero() {
               background: "rgba(13, 13, 26, 0.7)",
               border: "1px solid rgba(71, 162, 72, 0.4)",
               borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               backdropFilter: "blur(8px)",
               color: "#47A248",
             }}
@@ -371,11 +364,11 @@ export default function Hero() {
 
           {/* Profile image wrapper */}
           <div
-            className="w-[160px] h-[160px] md:w-[300px] md:h-[300px]"
+            className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
             style={{
               position: "relative",
               borderRadius: "50%",
-              padding: "6px",
+              padding: "4px", // Sits just outside the image
               background: "linear-gradient(135deg, rgba(124,58,237,0.4), rgba(167,139,250,0.2))",
               boxShadow: "0 0 35px rgba(124,58,237,0.25)",
               zIndex: 2,
@@ -393,13 +386,12 @@ export default function Hero() {
               <Image
                 src="/revanth.jpg"
                 alt="Banoth Revanth Kumar — Full Stack Developer"
-                width={300}
-                height={300}
+                width={320}
+                height={320}
                 priority
+                className="w-full h-full object-cover"
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  objectPosition: "center 10%", // Shift crop upward to focus perfectly on the face
                   borderRadius: "50%",
                 }}
               />
