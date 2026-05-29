@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FiGithub, FiExternalLink } from "react-icons/fi";
@@ -180,6 +180,7 @@ export default function Hero() {
               {/* Split first name */}
               {Array.from(nameFirst).map((char, index) => (
                 <motion.span
+                  // eslint-disable-next-line react/no-array-index-key
                   key={`first-${index}`}
                   variants={letterVariants}
                   style={{ display: "inline-block", whiteSpace: "pre" }}
@@ -191,6 +192,7 @@ export default function Hero() {
               <span className="gradient-text">
                 {Array.from(nameLast).map((char, index) => (
                   <motion.span
+                    // eslint-disable-next-line react/no-array-index-key
                     key={`last-${index}`}
                     variants={letterVariants}
                     style={{ display: "inline-block", whiteSpace: "pre" }}
